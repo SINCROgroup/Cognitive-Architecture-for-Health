@@ -43,6 +43,7 @@ class L3_Wrapper():
                 self.time_const_lowpass_filter_estimand_pos = 0.1
                 self.time_const_lowpass_filter_phase = 0.2
                 self.is_use_elapsed_time = False
+                self.omega_listening = 0.81  # Natural frequency of the L3 agent during the listening phase
             case 1:
                 self.baseline_dataframe = pd.read_csv("./exercises_baselines/Ex03_baseline.csv", index_col='phase')
                 end_effector_inputs = 3 # End effector in input for the exercise (it is not necessarily equal to the end effectors of the baseline data)
@@ -52,6 +53,7 @@ class L3_Wrapper():
                 self.time_const_lowpass_filter_estimand_pos = 0.1
                 self.time_const_lowpass_filter_phase = 0.2
                 self.is_use_elapsed_time = False
+                self.omega_listening = 1.29  # Natural frequency of the L3 agent during the listening phase
             case _: 
                 print(f'Exercise ID {exercise_ID} not recognized, using default baseline.')
                 self.baseline_dataframe = pd.read_csv("./exercises_baselines/Ex03_baseline.csv", index_col='phase')
@@ -72,7 +74,6 @@ class L3_Wrapper():
             self.estimators_live.append(RecursiveOnlinePhaseEstimator(self.n_dims_estimand_pos, self.listening_time, discarded_time=0, min_duration_first_pseudoperiod=0, look_behind_pcent=self.look_behind_pcent, look_ahead_pcent=self.look_ahead_pcent, time_const_lowpass_filter_phase=self.time_const_lowpass_filter_phase, time_const_lowpass_filter_pos=self.time_const_lowpass_filter_estimand_pos, is_use_elapsed_time=self.is_use_elapsed_time))
 
         self.n_end_effectors = 5 # Number of end effectors available (hands, feet, hip)
-        self.omega_listening = 4  # Natural frequency of the L3 agent during the listening phase
         self.time_history = [0]
         self.initial_phase = 0
         self.current_phase = 0  # Current phase of the L3 agent
