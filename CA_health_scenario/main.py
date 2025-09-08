@@ -35,7 +35,6 @@ if __name__ == "__main__":
         path_to_data = parameters[1]
         exercise_ID = int(parameters[2]) if len(parameters) > 2 else 0  # Optional exercise ID
 
-
     # n_participants = 3
     # path_to_data = 'simulation_data'
 
@@ -83,12 +82,14 @@ if __name__ == "__main__":
                 time = 0
 
             else:
-                _, position, delta_t = agent.parse_TCP_string(data)  # Extract data coming from Unreal Engine
+                # _, position, delta_t = agent.parse_TCP_string(data)  # Extract data coming from Unreal Engine ADP: Old version without exercise ID
+                _, position, delta_t, exercise_ID = agent.parse_TCP_string(data)  # Extract data coming from Unreal Engine ADP: New version with exercise ID
 
                 if time == 0: agent.set_initial_position(position)
 
                 time += delta_t  # Update time
-                ic(position, delta_t)
+                ic(position, delta_t, exercise_ID)
+                changed = agent.change_exercise(exercise_ID, time)
                 message = agent.update_position(position, delta_t, time)  # Update position
 
                 _, ready_to_write, _ = select.select([], [connection], [])
