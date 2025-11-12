@@ -41,6 +41,7 @@ class L3_Wrapper():
                 columns_input = ['LAnkle.X', 'LAnkle.Y', 'LAnkle.Z', 'RAnkle.X', 'RAnkle.Y', 'RAnkle.Z', 'LWrist.X', 'LWrist.Y', 'LWrist.Z', 'RWrist.X', 'RWrist.Y', 'RWrist.Z']
                 self.baseline_pos_loop = np.array(self.baseline_dataframe[columns_input])  # Position loop for the baseline data
                 self.end_effector_inputs = 4 # End effector in input for the exercise (it is not necessarily equal to the end effectors of the baseline data)
+                self.select_list = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 21, 22] # Select LFoot, RFoot, LHand, RHand, delta_t, exercise_ID from the message
                 self.look_behind_pcent = 5
                 self.look_ahead_pcent = 40
                 self.listening_time = 30
@@ -54,6 +55,7 @@ class L3_Wrapper():
                 columns_input = ['Hip.X', 'Hip.Y', 'Hip.Z', 'RHip.X', 'RHip.Y', 'RHip.Z', 'LHip.X', 'LHip.Y', 'LHip.Z']
                 self.baseline_pos_loop = np.array(self.baseline_dataframe[columns_input])  # Position loop for the baseline data
                 self.end_effector_inputs = 3 # End effector in input for the exercise (it is not necessarily equal to the end effectors of the baseline data)
+                self.select_list = [0, 1, 2, 15, 16, 17, 18, 19, 20, 21, 22] # Select Pelvis, LThigh, RThigh, delta_t, exercise_ID from the message
                 self.look_behind_pcent = 5
                 self.look_ahead_pcent = 40
                 self.listening_time = 15
@@ -65,7 +67,7 @@ class L3_Wrapper():
                 print(f'Exercise ID {exercise_ID} not recognized, using default baseline.')
                 self.baseline_dataframe = pd.read_csv("./exercises_baselines/Ex03_baseline.csv", index_col='phase')
                 self.baseline_time_signal = pd.read_csv("./exercises_baselines/Ex03_baseline.csv", index_col='time')
-                self.end_effector_inputs = 5 # End effector in input for the exercise (it is not necessarily equal to the end effectors of the baseline data)
+                self.end_effector_inputs = 7 # End effector in input for the exercise (it is not necessarily equal to the end effectors of the baseline data)
         
         self.n_dims_estimand_pos = 3 * self.end_effector_inputs  # Number of dimensions of the position estimand
         self.columns = [
@@ -117,8 +119,8 @@ class L3_Wrapper():
     def parse_TCP_string(self, string : str) -> tuple[bool, Sequence[float]]:
         ic(string)
         numbers = np.array([float(num) for num in re.findall(r'-?\d+\.?\d*', string)])
-        flag = len(numbers) == self.n_dims_estimand_pos * self.n_participants + 1 
-        # flag = len(numbers) == self.n_dims_estimand_pos * self.n_participants + 2  # ADP: Uncomment for the version with state machine
+        flag = len(numbers) == self.n_dims_estimand_pos * self.n_participants + 2  # ADP: Uncomment for the version with state machine
+        numbers = numbers[self.select_list] # Filter points of interest from the message, according to the exercise
         # return flag, numbers[0:-1], numbers[-1]  # Use flag for debugging. The last number is the time in seconds
         return flag, numbers[0:-2], numbers[-2], numbers[-1]  # ADP: Uncomment for the version with state machine
 
@@ -214,6 +216,7 @@ class L3_Wrapper():
                 columns_input = ['LAnkle.X', 'LAnkle.Y', 'LAnkle.Z', 'RAnkle.X', 'RAnkle.Y', 'RAnkle.Z', 'LWrist.X', 'LWrist.Y', 'LWrist.Z', 'RWrist.X', 'RWrist.Y', 'RWrist.Z']
                 self.baseline_pos_loop = np.array(self.baseline_dataframe[columns_input])  # Position loop for the baseline data
                 self.end_effector_inputs = 4 # End effector in input for the exercise (it is not necessarily equal to the end effectors of the baseline data)
+                self.select_list = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 21, 22] # Select LFoot, RFoot, LHand, RHand, delta_t, exercise_ID from the message
                 self.look_behind_pcent = 5
                 self.look_ahead_pcent = 40
                 self.listening_time = 30
@@ -227,6 +230,7 @@ class L3_Wrapper():
                 columns_input = ['Hip.X', 'Hip.Y', 'Hip.Z', 'RHip.X', 'RHip.Y', 'RHip.Z', 'LHip.X', 'LHip.Y', 'LHip.Z']
                 self.baseline_pos_loop = np.array(self.baseline_dataframe[columns_input])  # Position loop for the baseline data
                 self.end_effector_inputs = 3 # End effector in input for the exercise (it is not necessarily equal to the end effectors of the baseline data)
+                self.select_list = [0, 1, 2, 15, 16, 17, 18, 19, 20, 21, 22] # Select Pelvis, LThigh, RThigh, delta_t, exercise_ID from the message
                 self.look_behind_pcent = 5
                 self.look_ahead_pcent = 40
                 self.listening_time = 15
