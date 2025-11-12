@@ -76,6 +76,7 @@ class L3_Wrapper():
                 self.time_const_lowpass_filter_estimand_pos = 0.1
                 self.time_const_lowpass_filter_phase = 0.2
                 self.is_use_elapsed_time = True
+                self.omega_listening = 0.81  # Natural frequency of the L3 agent during the listening phase
             case _: 
                 print(f'Exercise ID {exercise_ID} not recognized, using default baseline.')
                 self.baseline_dataframe = pd.read_csv("./exercises_baselines/Ex03_baseline.csv", index_col='phase')
@@ -264,6 +265,7 @@ class L3_Wrapper():
                 self.time_const_lowpass_filter_estimand_pos = 0.1
                 self.time_const_lowpass_filter_phase = 0.2
                 self.is_use_elapsed_time = True
+                self.omega_listening = 0.81  # Natural frequency of the L3 agent during the listening phase
             case _: 
                 print(f'Exercise ID {exercise_ID} not recognized, using default baseline.')
                 self.baseline_dataframe = pd.read_csv("./exercises_baselines/Ex03_baseline.csv", index_col='phase')
